@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.betpawa.wallet";
+option java_outer_classname = "WalletProto";
+option objc_class_prefix = "WP";
+
+package wallet;
+
+import "google/protobuf/empty.proto";
+
+// Interface exposed by the server
+service Wallet {
+
+    // RPC to deposit funds to an user's wallet.
+    // An error is thrown if an unknown currency is submitted.
+    rpc Deposit(WalletRequest) returns (google.protobuf.Empty) {}
+
+    // RPC to withdraw funds from the user's wallet.
+    // An error is thrown if an unknown currency is submitted
+    // or if the user has insufficient funds.
+    rpc Withdraw(WalletRequest) returns (google.protobuf.Empty) {}
+
+    // RPC to get the user's current balance for each currency.
+    rpc Balance(WalletRequest) returns (BalanceSummary) {}
+
+}
+
+message WalletRequest {
+    int64 user_id = 1;
+    string amount = 2;
+    CURRENCY currency = 3;
+}
+
+message BalanceSummary {
+    map<string, CURRENCY> amount = 1;
+}
+
+enum CURRENCY {
+    USD = 0;
+    EUR = 1;
+    GBP = 2;
+}
