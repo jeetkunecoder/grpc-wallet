@@ -19,7 +19,7 @@ docker run --rm --name postgres-docker -e POSTGRES_PASSWORD=b3tp4w4 -d -p 5432:5
 ```
 
 Run the Postgres script to create and populate the DB.
-In the terminal, go to betpawa-wallet/src/main/resources and execute:
+In the terminal, cd into grpc-wallet/src/main/resources and execute:
 ```
 psql -h localhost -U postgres -f wallet-schema.sql
 ```
