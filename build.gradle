@@ -15,25 +15,21 @@ targetCompatibility = 1.8
 def grpcVersion = '1.19.0'
 def protobufVersion = '3.7.1'
 def protocVersion = protobufVersion
+def springBootVersion = '2.1.4.RELEASE'
 
 dependencies {
     implementation "io.grpc:grpc-protobuf:${grpcVersion}"
     implementation "io.grpc:grpc-stub:${grpcVersion}"
     compileOnly "javax.annotation:javax.annotation-api:1.2"
-
-    compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
-    compile 'org.postgresql:postgresql:42.2.5'
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '2.1.4.RELEASE'
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.1.4.RELEASE'
-
-    // examples/advanced need this for JsonFormat
-    implementation "com.google.protobuf:protobuf-java-util:${protobufVersion}"
-
+    implementation 'io.github.lognet:grpc-spring-boot-starter:3.2.1'
+    implementation 'org.postgresql:postgresql:42.2.5'
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}"
+    implementation("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
+    testCompile("org.springframework.boot:spring-boot-starter-test")
     runtimeOnly "io.grpc:grpc-netty-shaded:${grpcVersion}"
-
-    testImplementation "io.grpc:grpc-testing:${grpcVersion}"
     testImplementation "junit:junit:4.12"
-    testImplementation "org.mockito:mockito-core:2.25.1"
+    implementation "io.spring.gradle:dependency-management-plugin:0.6.1.RELEASE"
+    implementation "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
 }
 
 protobuf {

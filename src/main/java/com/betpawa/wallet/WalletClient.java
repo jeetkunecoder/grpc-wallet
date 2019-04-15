@@ -39,10 +39,10 @@ public class WalletClient {
     /**
      * Request a deposit transaction
      */
-    public void makeDeposit(int userId, String amount, CURRENCY currency) {
-        info("*** makeDeposit: userId={0} lon={1} cur={2}", userId, amount, currency);
+    public void makeDeposit(Long user, String amount, CURRENCY currency) {
+        info("*** makeDeposit: user={0} lon={1} cur={2}", user, amount, currency);
         WalletRequest request = WalletRequest.newBuilder()
-            .setUserId(userId)
+            .setUser(user)
             .setAmount(amount)
             .setCurrency(currency)
             .build();
@@ -59,10 +59,10 @@ public class WalletClient {
     /**
      * Request a withdrawal transaction
      */
-    public void makeWithdrawal(int userId, String amount, CURRENCY currency) {
-        info("*** makeWithdrawal: userId={0} lon={1} cur={2}", userId, amount, currency);
+    public void makeWithdrawal(Long user, String amount, CURRENCY currency) {
+        info("*** makeWithdrawal: userId={0} lon={1} cur={2}", user, amount, currency);
         WalletRequest request = WalletRequest.newBuilder()
-                .setUserId(userId)
+                .setUser(user)
                 .setAmount(amount)
                 .setCurrency(currency)
                 .build();
@@ -76,11 +76,10 @@ public class WalletClient {
         }
     }
 
-    // TODO: Handle null value scenario
-    public BalanceSummary getBalance(int userId) {
-        info("*** getBalance: userId={0}", userId);
+    public BalanceSummary getBalance(Long user) {
+        info("*** getBalance: userId={0}", user);
         BalanceSummary summary = null;
-        WalletRequest request = WalletRequest.newBuilder().setUserId(userId).build();
+        WalletRequest request = WalletRequest.newBuilder().setUser(user).build();
 
         try {
             summary = blockingStub.balance(request);
@@ -99,29 +98,46 @@ public class WalletClient {
      */
     public static void main(String[] args) throws InterruptedException {
 
-        WalletClient client = new WalletClient("localhost", 8980);
+        WalletClient client = new WalletClient("localhost", 6565);
         try {
+
+            // Integration Test
+            client.makeWithdrawal(1L, "200", CURRENCY.USD);
+            client.makeDeposit(1L, "100", CURRENCY.USD);
+            client.getBalance(1L);
+            client.makeWithdrawal(1L, "200", CURRENCY.USD);
+            client.makeDeposit(1L, "100", CURRENCY.EUR);
+            client.getBalance(1L);
+            client.makeWithdrawal(1L, "200", CURRENCY.USD);
+            client.makeDeposit(1L, "100", CURRENCY.USD);
+            client.getBalance(1L);
+            client.makeWithdrawal(1L, "200", CURRENCY.USD);
+            client.getBalance(1L);
+            client.makeWithdrawal(1L, "200", CURRENCY.USD);
+
+
+
             // ROUND A
             // Deposit 100 USD
-            client.makeDeposit(1, "100", CURRENCY.USD);
-
-            // Withdraw 200 USD
-            client.makeWithdrawal(1, "200", CURRENCY.USD);
-
-            // Deposit 100 EUR
-            client.makeDeposit(1, "100", CURRENCY.EUR);
-
-            // Get balance
-            client.getBalance(1);
-
-            // Withdraw 100 USD
-            client.makeWithdrawal(1, "100", CURRENCY.USD);
-
-            // Get balance
-            client.getBalance(1);
-
-            // Withdraw 100 USD
-            client.makeWithdrawal(1, "100", CURRENCY.USD);
+//            client.makeDeposit(1L, "100", CURRENCY.USD);
+//
+//            // Withdraw 200 USD
+//            client.makeWithdrawal(1L, "200", CURRENCY.USD);
+//
+//            // Deposit 100 EUR
+//            client.makeDeposit(1L, "100", CURRENCY.EUR);
+//
+//            // Get balance
+//            client.getBalance(1L);
+//
+//            // Withdraw 100 USD
+//            client.makeWithdrawal(1L, "100", CURRENCY.USD);
+//
+//            // Get balance
+//            client.getBalance(1L);
+//
+//            // Withdraw 100 USD
+//            client.makeWithdrawal(1L, "100", CURRENCY.USD);
 
         } finally {
             client.shutdown();

@@ -6,6 +6,11 @@ deposit and withdrawal transactions.
 
 ### How do I get set up? ###
 
+Clone the project
+```
+git clone
+```
+
 #### Database Configuration ####
 
 Get the Postgres Docker image:
@@ -15,13 +20,13 @@ docker pull postgres
 
 Start the Postgres container:
 ```
-docker run --rm --name postgres-docker -e POSTGRES_PASSWORD=b3tp4w4 -d -p 5432:5432 postgres
+    docker run --rm --name postgres-docker -e POSTGRES_PASSWORD=b3tp4w4 -d -p 5432:5432 postgres
 ```
 
 Run the Postgres script to create and populate the DB.
 In the terminal, cd into grpc-wallet/src/main/resources and execute:
 ```
-psql -h localhost -U postgres -f wallet-schema.sql
+psql -h localhost -U postgres -f src/main/resources/wallet-schema.sql
 ```
 
 Then, enter the password from the previous step: b3tp4w4
