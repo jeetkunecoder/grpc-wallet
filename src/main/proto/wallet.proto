@@ -24,6 +24,8 @@ service Wallet {
     // RPC to get the user's current balance for each currency.
     rpc Balance(WalletRequest) returns (BalanceSummary) {}
 
+    // User registration
+    rpc Register(UserRequest) returns (google.protobuf.Empty) {}
 }
 
 message WalletRequest {
@@ -32,8 +34,13 @@ message WalletRequest {
     CURRENCY currency = 3;
 }
 
+message UserRequest {
+    int64 id = 1;
+    string name = 2;
+}
+
 message BalanceSummary {
-    map<string, CURRENCY> amount = 1;
+    map<int32, string> amount = 1;
 }
 
 enum CURRENCY {
@@ -46,4 +53,10 @@ enum CURRENCY {
 enum OPERATION_TYPE {
     TRANSACTION = 0;
     SUMMARY = 1;
+}
+
+enum ROUND {
+    A = 0;
+    B = 1;
+    C = 2;
 }

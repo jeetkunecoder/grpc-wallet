@@ -3,6 +3,7 @@ package com.betpawa.wallet.service;
 import com.betpawa.wallet.BalanceSummary;
 import com.betpawa.wallet.CURRENCY;
 import com.betpawa.wallet.OPERATION_TYPE;
+import com.betpawa.wallet.UserRequest;
 import com.betpawa.wallet.WalletGrpc;
 import com.betpawa.wallet.WalletRequest;
 
@@ -47,18 +48,15 @@ public class WalletService extends WalletGrpc.WalletImplBase {
         responseObserver.onCompleted();
     }
 
-    private void createUser() {
-
+    @Override
+    public void register(UserRequest request, StreamObserver<Empty> responseObserver) {
+        responseObserver.onNext(registerUser(request));
+        responseObserver.onCompleted();
     }
 
     public Empty makeDeposit(WalletRequest request) {
         logger.info("Requesting deposit transaction of " +
                 request.getCurrency() + " " + request.getAmount());
-
-        User user = new User(request.getUser(), "user_" + request.getUser());
-
-        logger.info("Registering: " + user.getName());
-        userRepository.save(user);
 
         logger.info("Depositing: " + request.getAmount() + " " + request.getCurrency());
 
@@ -73,12 +71,12 @@ public class WalletService extends WalletGrpc.WalletImplBase {
         return Empty.getDefaultInstance();
     }
 
-    private Empty makeWithdrawal(WalletRequest request) {
+    public Empty makeWithdrawal(WalletRequest request) {
         logger.info("Requesting withdrawal transaction of " +
             request.getCurrency() + " " + request.getAmount());
         BigDecimal requestedAmount = new BigDecimal(request.getAmount());
         BigDecimal balanceAmount;
-        if(request.getCurrency() != CURRENCY.UNRECOGNIZED) {
+        if(request.getCurrency() == CURRENCY.UNRECOGNIZED) {
             logger.info("Unknown currency: " + request.getCurrency());
             return Empty.getDefaultInstance();
         }
@@ -99,7 +97,7 @@ public class WalletService extends WalletGrpc.WalletImplBase {
         return Empty.getDefaultInstance();
     }
 
-    private BalanceSummary getBalance(WalletRequest request) {
+    public BalanceSummary getBalance(WalletRequest request) {
         logger.info("Obtaining account balance..");
         BalanceSummary summary = BalanceSummary.getDefaultInstance();
         for(CURRENCY currency : CURRENCY.values()) {
@@ -108,12 +106,19 @@ public class WalletService extends WalletGrpc.WalletImplBase {
                 amount = walletRepository.getUserBalance(request.getUser(), (long)currency.getNumber());
             }
             if(amount != null) {
-                summary.toBuilder().putAmount(amount.toString(), currency);
+                summary.toBuilder().putAmount(currency.getNumber(), amount.toString());
                 logger.info("User ID: " + request.getUser() +
                     " - Account balance in " + currency + " is: " + amount.toString());
             }
         }
         return summary;
+    }
+
+    public Empty registerUser(UserRequest request) {
+        User user = new User(request.getId(), "user_" + request.getId());
+        logger.info("Registering: " + user.getName());
+        userRepository.save(user);
+        return Empty.getDefaultInstance();
     }
 
     private boolean fundsAreSufficient(BigDecimal request, BigDecimal balance) {
