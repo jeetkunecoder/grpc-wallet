@@ -56,7 +56,7 @@ sourceSets {
 startScripts.enabled = false
 
 task walletServer(type: CreateStartScripts) {
-    mainClassName = 'com.betpawa.wallet.WalletServer'
+    mainClassName = 'com.betpawa.wallet.WalletApplication'
     applicationName = 'wallet-server'
     outputDir = new File(project.buildDir, 'tmp')
     classpath = startScripts.classpath

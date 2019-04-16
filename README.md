@@ -10,10 +10,7 @@ deposit and withdrawal transactions.
 
 ### How do I get set up? ###
 
-Clone the project
-```
-git clone
-```
+Once you have cloned the project, execute the following steps:
 
 #### Database Configuration ####
 
@@ -43,9 +40,15 @@ Then, enter the password from the previous step: b3tp4w4
 ```
 
 2. Run the server:
+
+Currently, the best option to run the server is through IntelliJ. Right click on
+WalletApplication and then click on run. Using this option the server will run faster.
+
+Alternatively, the server can be started using the following command from project's root.
 ```
 ./build/install/betpawa-wallet/bin/wallet-server
 ```
+This option runs slower, so the first option is recommended.
 
 3. In another terminal, run the client:
 ```
