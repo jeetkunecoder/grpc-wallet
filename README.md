@@ -52,7 +52,8 @@ Then, enter the password from the previous step: b3tp4w4
 ./build/install/betpawa-wallet/bin/wallet-client -u <num_users> -t <num_threads> -r <rounds>
 ```
 Where:
-
+```
  -r,--rounds <arg>    number of rounds each thread is executing
  -t,--threads <arg>   number of concurrent requests a user will make
  -u,--users <arg>     number of concurrent users emulated
+```
